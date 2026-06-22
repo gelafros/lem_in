@@ -1,0 +1,4 @@
+package simulator
+
+func Simulator() {
+}
