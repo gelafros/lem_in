@@ -9,11 +9,12 @@ import (
 )
 
 type Colony struct {
-	AntsCount int
-	Rooms     map[string]Room
-	Links     map[string][]string
-	StartRoom string
-	EndRoom   string
+	AntsCount  int
+	Rooms      map[string]Room
+	Links      map[string][]string
+	StartRoom  string
+	EndRoom    string
+	InputLines []string // the lines we got from the txt
 }
 
 type Room struct {
@@ -22,9 +23,11 @@ type Room struct {
 }
 
 func Parse(filePath string) (*Colony, error) {
-	// To store all the rooms as and their links as we parse them, we can initialize a map at the beginning of the  Parse  function:
+	// To store all the rooms as and their links as we parse them, we can initialize a map at the beginning
 	rooms := make(map[string]Room)
 	links := make(map[string][]string)
+	// To store the lines we got from the txt we initialize this var
+	var InputLines []string
 
 	// Open the file(test.txt)
 	file, err := os.Open(filePath)
@@ -41,6 +44,8 @@ func Parse(filePath string) (*Colony, error) {
 	}
 	// Check the firstline (antLine) and use Atoi so ants are a valid number
 	antLine := scanner.Text()
+	// We append the firstline (antLine) in InputLines to return it later
+	InputLines = append(InputLines, antLine)
 
 	ants, err := strconv.Atoi(antLine)
 	if err != nil {
@@ -58,6 +63,8 @@ func Parse(filePath string) (*Colony, error) {
 	// Start to read all lines
 	for scanner.Scan() {
 		line := scanner.Text()
+		// We append each line if InputLines to return it later
+		InputLines = append(InputLines, line)
 		// Check that the line has # and not ##(so its a comment) and we skip it (continue)
 		if strings.HasPrefix(line, "#") && !strings.HasPrefix(line, "##") {
 			continue
@@ -138,10 +145,11 @@ func Parse(filePath string) (*Colony, error) {
 	}
 
 	return &Colony{
-		AntsCount: ants,
-		Rooms:     rooms,
-		Links:     links,
-		StartRoom: startRoom,
-		EndRoom:   endRoom,
+		AntsCount:  ants,
+		Rooms:      rooms,
+		Links:      links,
+		StartRoom:  startRoom,
+		EndRoom:    endRoom,
+		InputLines: InputLines,
 	}, nil
 }
