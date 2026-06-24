@@ -26,6 +26,8 @@ func Parse(filePath string) (*Colony, error) {
 	// To store all the rooms as and their links as we parse them, we can initialize a map at the beginning
 	rooms := make(map[string]Room)
 	links := make(map[string][]string)
+	coordinatesRooms := make(map[string]Room)
+	linkedRooms := make(map[string]bool)
 	// To store the lines we got from the txt we initialize this var
 	var InputLines []string
 
@@ -49,7 +51,7 @@ func Parse(filePath string) (*Colony, error) {
 
 	ants, err := strconv.Atoi(antLine)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("ERROR: invalid data format, couldnt read the number of ants")
 	} else if ants <= 0 {
 		return nil, fmt.Errorf("ERROR: invalid data format, invalid number of ants")
 	}
@@ -70,10 +72,16 @@ func Parse(filePath string) (*Colony, error) {
 			continue
 		}
 		if line == "##start" {
+			if startRoom != "" {
+				return nil, fmt.Errorf("ERROR: invalid data format, ##start duplicate")
+			}
 			isStart = true
 			continue
 		}
 		if line == "##end" {
+			if endRoom != "" {
+				return nil, fmt.Errorf("ERROR: invalid data format, ##end duplicate")
+			}
 			isEnd = true
 			continue
 		}
@@ -85,6 +93,13 @@ func Parse(filePath string) (*Colony, error) {
 			// its a Room
 
 			roomName := roomParts[0]
+			// Check if roomParts[0] (the roomName is empty)
+			if roomName == "" {
+				return nil, fmt.Errorf("ERROR: invalid data format, there is no ##start)")
+			}
+			if strings.HasPrefix(roomName, "L") || strings.HasPrefix(roomName, "#") {
+				return nil, fmt.Errorf("ERROR: invalid data format, roomname is incorrect")
+			}
 
 			if isStart {
 				startRoom = roomName
@@ -101,14 +116,25 @@ func Parse(filePath string) (*Colony, error) {
 
 			X, err := strconv.Atoi(roomParts[1])
 			if err != nil {
-				return nil, err
+				return nil, fmt.Errorf("ERROR: invalid format, couldnt read the X coordinate")
 			}
 			Y, err := strconv.Atoi(roomParts[2])
 			if err != nil {
-				return nil, err
+				return nil, fmt.Errorf("ERROR: invalid format, couldnt read the Y coordinate")
+			}
+			// Check if there is a duplicate room with the same coordinates
+			coordKey := fmt.Sprintf("%d,%d", X, Y)
+			_, exists := coordinatesRooms[coordKey]
+			if exists {
+				return nil, fmt.Errorf("ERROR: invalid data format, duplicate coordinates for room")
+			} else {
+				coordinatesRooms[coordKey] = Room{
+					X: X,
+					Y: Y,
+				}
 			}
 			// Check if this room already exists in Room struct
-			_, exists := rooms[roomName]
+			_, exists = rooms[roomName]
 			if exists {
 				return nil, fmt.Errorf("ERROR: invalid data format, duplicate room")
 				// If this room doesnt exist add it to Room struct
@@ -134,6 +160,17 @@ func Parse(filePath string) (*Colony, error) {
 			} else if room1 == room2 {
 				return nil, fmt.Errorf("ERROR: invalid data format, self-linking room")
 			} else {
+				// Check alphabetically if the link A-B is there and check so we dont add B-A
+				var linkKey string
+				if room1 < room2 {
+					linkKey = room1 + "-" + room2
+				} else {
+					linkKey = room2 + "-" + room1
+				}
+				if linkedRooms[linkKey] {
+					return nil, fmt.Errorf("ERROR: invalid data format duplicate link")
+				}
+				linkedRooms[linkKey] = true
 				links[room1] = append(links[room1], room2)
 				links[room2] = append(links[room2], room1)
 			}
@@ -142,6 +179,9 @@ func Parse(filePath string) (*Colony, error) {
 	}
 	if startRoom == "" || endRoom == "" {
 		return nil, fmt.Errorf("ERROR: invalid data format, invalid colony format")
+	}
+	if startRoom == endRoom {
+		return nil, fmt.Errorf("ERROR: invalid data format, ##start is the same as ##end")
 	}
 
 	return &Colony{
