@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"lem-in/internal/parser"
+	"lem-in/internal/simulator"
 	"lem-in/internal/solver"
 )
 
@@ -20,10 +21,10 @@ func main() {
 		fmt.Print(err)
 		os.Exit(1)
 	}
-	path, err := solver.Solve(colony)
+	paths, err := solver.Solve(colony)
 	if err != nil {
 		fmt.Print(err)
 		os.Exit(1)
 	}
-	fmt.Println("Path found:", path)
+	simulator.Simulator(colony, paths)
 }

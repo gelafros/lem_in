@@ -93,10 +93,7 @@ func Parse(filePath string) (*Colony, error) {
 			// its a Room
 
 			roomName := roomParts[0]
-			// Check if roomParts[0] (the roomName is empty)
-			if roomName == "" {
-				return nil, fmt.Errorf("ERROR: invalid data format, there is no ##start)")
-			}
+
 			if strings.HasPrefix(roomName, "L") || strings.HasPrefix(roomName, "#") {
 				return nil, fmt.Errorf("ERROR: invalid data format, roomname is incorrect")
 			}
@@ -136,7 +133,7 @@ func Parse(filePath string) (*Colony, error) {
 			// Check if this room already exists in Room struct
 			_, exists = rooms[roomName]
 			if exists {
-				return nil, fmt.Errorf("ERROR: invalid data format, duplicate room")
+				return nil, fmt.Errorf("ERROR: invalid data format, duplicate room name")
 				// If this room doesnt exist add it to Room struct
 			} else {
 				rooms[roomName] = Room{
