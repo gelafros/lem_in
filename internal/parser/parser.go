@@ -68,23 +68,24 @@ func Parse(filePath string) (*Colony, error) {
 		// We append each line if InputLines to return it later
 		InputLines = append(InputLines, line)
 		// Check that the line has # and not ##(so its a comment) and we skip it (continue)
-		if strings.HasPrefix(line, "#") && !strings.HasPrefix(line, "##") {
-			continue
-		}
-		if line == "##start" {
-			if startRoom != "" {
-				return nil, fmt.Errorf("ERROR: invalid data format, ##start duplicate")
+		if strings.HasPrefix(line, "#") { //&& !strings.HasPrefix(line, "##") {
+			if line == "##start" {
+				if startRoom != "" {
+					return nil, fmt.Errorf("ERROR: invalid data format, ##start duplicate")
+				}
+				isStart = true
+				continue
 			}
-			isStart = true
-			continue
-		}
-		if line == "##end" {
-			if endRoom != "" {
-				return nil, fmt.Errorf("ERROR: invalid data format, ##end duplicate")
+			if line == "##end" {
+				if endRoom != "" {
+					return nil, fmt.Errorf("ERROR: invalid data format, ##end duplicate")
+				}
+				isEnd = true
+				continue
 			}
-			isEnd = true
 			continue
 		}
+
 		// Split the line to check if its a room or a link
 		roomParts := strings.Fields(line)
 		linkParts := strings.Split(line, "-")
@@ -171,6 +172,8 @@ func Parse(filePath string) (*Colony, error) {
 				links[room1] = append(links[room1], room2)
 				links[room2] = append(links[room2], room1)
 			}
+		} else {
+			return nil, fmt.Errorf("ERROR: invalid data format, malformed line encountered")
 		}
 
 	}
