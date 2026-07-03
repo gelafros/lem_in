@@ -67,6 +67,11 @@ func Parse(filePath string) (*Colony, error) {
 		line := scanner.Text()
 		// We append each line if InputLines to return it later
 		InputLines = append(InputLines, line)
+		// We check if line is empty but not really empty beacuse it contains " "(blanck spaces) and remove them
+		line = strings.TrimSpace(line)
+		if line == "" {
+			continue
+		}
 		// Check that the line has # and not ##(so its a comment) and we skip it (continue)
 		if strings.HasPrefix(line, "#") { //&& !strings.HasPrefix(line, "##") {
 			if line == "##start" {
