@@ -1,0 +1,38 @@
+:root { color-scheme: dark; font-family: Inter, ui-sans-serif, system-ui, sans-serif; background: #07111f; color: #e7f3ff; }
+* { box-sizing: border-box; }
+body { margin: 0; min-height: 100vh; background: radial-gradient(circle at 70% 20%, #183454 0, #07111f 48%); }
+header { height: 64px; display: flex; align-items: center; padding: 0 24px; border-bottom: 1px solid #27425e; }
+h1 { margin: 0; font-size: 21px; letter-spacing: .04em; }
+h1 span { color: #72d6c9; font-size: 14px; font-weight: 500; margin-left: 8px; }
+/* Keep controls beside a scene that fills the remaining desktop viewport. */
+main { display: grid; grid-template-columns: minmax(280px, 360px) 1fr; height: calc(100vh - 64px); }
+.panel { padding: 20px; background: rgba(7, 17, 31, .88); border-right: 1px solid #27425e; overflow-y: auto; }
+label { display: flex; justify-content: space-between; margin: 0 0 8px; font-size: 13px; font-weight: 700; color: #b9cee2; }
+textarea { width: 100%; min-height: 250px; resize: vertical; padding: 12px; color: #dff7f3; background: #050c16; border: 1px solid #31516e; border-radius: 8px; font: 12px/1.45 ui-monospace, monospace; }
+textarea:focus, button:focus-visible, input:focus-visible { outline: 2px solid #49c9b8; outline-offset: 2px; }
+button { border: 1px solid #365571; border-radius: 7px; padding: 9px 11px; background: #132940; color: #e7f3ff; cursor: pointer; font-weight: 650; }
+button:hover:not(:disabled) { background: #1c3c5c; border-color: #72d6c9; }
+button:disabled { opacity: .42; cursor: default; }
+.primary { width: 100%; margin-top: 10px; border: 0; color: #041411; background: #72d6c9; }
+.primary:hover:not(:disabled) { background: #93eadf; }
+#error { min-height: 20px; color: #ff9b9b; font-size: 13px; }
+.controls { display: grid; grid-template-columns: repeat(2, 1fr); gap: 7px; margin: 12px 0 20px; }
+.controls #reset { grid-column: 1 / -1; }
+input[type="range"] { width: 100%; accent-color: #72d6c9; }
+output { color: #72d6c9; }
+.status { display: flex; flex-direction: column; gap: 4px; margin-top: 20px; padding: 12px; border-radius: 8px; background: #0c1d2e; }
+#summary, .hint { color: #8fa8be; font-size: 12px; }
+.hint { text-align: center; margin-top: 18px; }
+#scene { position: relative; min-width: 0; overflow: hidden; }
+#scene canvas { display: block; width: 100%; height: 100%; }
+.empty { position: absolute; inset: 0; display: grid; place-items: center; color: #7690a8; pointer-events: none; }
+.legend { position: absolute; right: 16px; bottom: 16px; display: flex; gap: 14px; padding: 9px 12px; border-radius: 8px; background: rgba(5, 12, 22, .76); font-size: 12px; }
+.dot { display: inline-block; width: 9px; height: 9px; margin-right: 5px; border-radius: 50%; }
+.dot.start { background: #48d5a7; } .dot.end { background: #ff6f91; } .dot.ant { background: #ffd166; }
+/* Stack controls above the scene on narrow screens, allowing the page to scroll. */
+@media (max-width: 760px) {
+  header { height: 54px; padding: 0 14px; }
+  main { grid-template-columns: 1fr; grid-template-rows: auto minmax(420px, 62vh); height: auto; }
+  .panel { border-right: 0; border-bottom: 1px solid #27425e; }
+  textarea { min-height: 180px; }
+}

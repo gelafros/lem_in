@@ -1,0 +1,11 @@
+# Binaries and build artifacts
+lem-in
+*.exe
+*.out
+coverage.out
+
+# OS & editor files
+.DS_Store
+*:Zone.Identifier
+.vscode/
+.idea/
