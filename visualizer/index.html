@@ -12,18 +12,18 @@
     <aside class="panel">
       <label for="output">Paste complete lem-in output</label>
       <textarea id="output" spellcheck="false" placeholder="Map, blank line, then movement turns…"></textarea>
-      <button id="load" class="primary">Load colony</button>
-      <p id="error" role="alert"></p>
-      <div class="controls" aria-label="Playback controls">
-        <button id="back" title="Previous turn">← Back</button>
-        <button id="play">▶ Play</button>
-        <button id="pause">Ⅱ Pause</button>
-        <button id="step">Step →</button>
-        <button id="reset">↺ Reset</button>
+      <button id="load" type="button" class="primary">Load colony</button>
+      <p id="error" role="alert" aria-live="assertive"></p>
+      <div class="controls" role="group" aria-label="Playback controls">
+        <button id="back" type="button" title="Previous turn">← Back</button>
+        <button id="play" type="button" title="Play simulation">▶ Play</button>
+        <button id="pause" type="button" title="Pause simulation">Ⅱ Pause</button>
+        <button id="step" type="button" title="Next turn">Step →</button>
+        <button id="reset" type="button" title="Reset to turn 0">↺ Reset</button>
       </div>
-      <label for="speed">Speed <output id="speed-value">600 ms</output></label>
+      <label for="speed">Speed <output id="speed-value" for="speed">600 ms</output></label>
       <input id="speed" type="range" min="100" max="1500" step="50" value="600">
-      <div class="status"><strong id="turn">Turn 0 / 0</strong><span id="summary">No colony loaded</span></div>
+      <div class="status" role="status" aria-live="polite"><strong id="turn">Turn 0 / 0</strong><span id="summary">No colony loaded</span></div>
       <p class="hint">Drag to orbit · scroll to zoom · right-drag to pan</p>
     </aside>
     <section id="scene" aria-label="3D ant farm"><div class="empty">Load output to explore the colony</div></section>
