@@ -17,10 +17,18 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: '1.22'
+          go-version-file: go.mod
 
-      - name: Vet and Test with Race Detector
+      - name: Vet and Test Go with Race Detector
         run: |
           go vet ./...
           go test -v -race -coverpkg=./... -coverprofile=coverage.out ./...
           go tool cover -func=coverage.out
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Test Visualizer
+        run: node --test visualizer/app.test.js

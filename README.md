@@ -4,7 +4,7 @@
 [![CI](https://github.com/gelafros/lem_in/actions/workflows/ci.yml/badge.svg)](https://github.com/gelafros/lem_in/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-A graph pathfinding engine and turn-based discrete simulator written in **Go (zero external dependencies)** that routes $N$ ants from a `##start` room to an `##end` room across an undirected tunnel network in the **minimum number of turns**, without ever exceeding room or tunnel capacity constraints. Includes an interactive **HTML5 Canvas Web Visualizer**.
+A graph pathfinding engine and turn-based discrete simulator written in **Go (zero external dependencies)** that routes $N$ ants from a `##start` room to an `##end` room across an undirected tunnel network in the **minimum number of turns**, without ever exceeding room or tunnel capacity constraints. Includes an interactive **3D WebGL (Three.js) Visualizer**.
 
 ---
 
@@ -28,7 +28,7 @@ Naive greedy shortest-path selection fails on graphs with "trap" edges (e.g., a 
 ```text
 lem_in/
 ├── cmd/
-│   └── main.go                      # CLI entry point
+│   └── lem-in.go                    # CLI entry point
 ├── internal/
 │   ├── parser/
 │   │   ├── parser.go                # Colony file lexer, validator & graph builder
@@ -40,9 +40,10 @@ lem_in/
 │       ├── simulator.go             # Greedy path scheduler & turn-by-turn engine
 │       └── simulator_test.go        # Turn simulation verification tests
 ├── tests/                           # Benchmark & edge-case colony topology fixtures
-├── visualizer/                      # Interactive HTML5 Canvas colony visualizer
+├── visualizer/                      # Interactive 3D Three.js colony visualizer
 │   ├── index.html
 │   ├── app.js
+│   ├── app.test.js
 │   ├── ui.js
 │   └── style.css
 ├── go.mod
@@ -72,6 +73,7 @@ Example output (`tests/example00.txt`):
 0-2
 2-3
 3-1
+
 L1-2
 L1-3 L2-2
 L1-1 L2-3 L3-2
@@ -84,11 +86,12 @@ L4-1
 
 ```bash
 go test -v -race -coverpkg=./... ./...
+node --test visualizer/app.test.js
 ```
 
-### Interactive Web Visualizer
+### Interactive 3D Web Visualizer
 
-Serve the `visualizer/` directory with any static file server (e.g., `python3 -m http.server -d visualizer 8080`) and paste the solver output to step through ant movements turn-by-turn on an interactive canvas.
+Open `visualizer/index.html` in a browser (or serve the `visualizer/` directory with any static file server, e.g., `python3 -m http.server -d visualizer 8080`) and paste the complete solver output to step through ant movements turn-by-turn in an interactive 3D Three.js scene.
 
 ---
 

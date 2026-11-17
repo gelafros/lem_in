@@ -1,7 +1,9 @@
 # Binaries and build artifacts
 lem-in
+lem_in
 *.exe
 *.out
+*.test
 coverage.out
 
 # OS & editor files
@@ -9,3 +11,5 @@ coverage.out
 *:Zone.Identifier
 .vscode/
 .idea/
+*.swp
+*~
