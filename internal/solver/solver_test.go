@@ -8,8 +8,8 @@ import (
 
 func TestSolveValidColonies(t *testing.T) {
 	files := []struct {
-		path      string
-		minPaths  int
+		path     string
+		minPaths int
 	}{
 		{"../../tests/example00.txt", 1},
 		{"../../tests/example01.txt", 2},

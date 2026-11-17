@@ -12,21 +12,24 @@ import (
 func main() {
 	args := os.Args
 	if len(args) < 2 {
-		fmt.Print("ERROR: File argument wasn't provided")
-		return
-	}
-	// Start to read the file to get the colony and check if it is correct format file
-	colony, err := parser.Parse(os.Args[1])
-	if err != nil {
-		fmt.Print(err)
+		fmt.Println("ERROR: File argument wasn't provided")
 		os.Exit(1)
 	}
-	// Call the solver.Solve to find the shortest and all other possible paths that dont block each other
+	// Read and validate the colony file format.
+	colony, err := parser.Parse(args[1])
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	// Find the optimal set of vertex-disjoint paths from start to end.
 	paths, err := solver.Solve(colony)
 	if err != nil {
-		fmt.Print(err)
+		fmt.Println(err)
 		os.Exit(1)
 	}
-	// Call the simulator.Simulator to guide the ants with max efficiency
-	simulator.Simulator(colony, paths)
+	// Simulate and print turn-by-turn ant movements across the paths.
+	if err := simulator.Simulator(colony, paths); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
 }

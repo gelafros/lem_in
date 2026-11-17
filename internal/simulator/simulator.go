@@ -2,25 +2,26 @@ package simulator
 
 import (
 	"fmt"
+	"math"
 
 	"lem-in/internal/parser"
 )
 
+// Simulator schedules ants across the provided disjoint paths and prints
+// the original colony input followed by the turn-by-turn ant movements.
 func Simulator(colony *parser.Colony, paths [][]string) error {
 	for _, v := range colony.InputLines {
 		fmt.Println(v)
 	}
+	fmt.Println()
 
-	// antPaths saves the chosen path index (0, 1, etc.) for each ant by its ID (1 to AntsCount)
-	antPaths := make([]int, colony.AntsCount+1)
-	
 	// antsOnPath stores a list of ant IDs assigned to each path index.
 	// For example, antsOnPath[0] will hold all ant IDs using path 0 (e.g. [1, 2, 4])
 	antsOnPath := make([][]int, len(paths))
-	
+
 	// Greedily assign each ant to the path that will allow it to reach the end room earliest
 	for i := 1; i <= colony.AntsCount; i++ {
-		minArrival := 999999
+		minArrival := math.MaxInt
 		bestPath := -1
 
 		// Evaluate each path to see which one gets ant 'i' to the end room first
@@ -32,13 +33,9 @@ func Simulator(colony *parser.Colony, paths [][]string) error {
 				bestPath = v
 			}
 		}
-		
+
 		// Record that ant 'i' is assigned to bestPath
 		antsOnPath[bestPath] = append(antsOnPath[bestPath], i)
-
-		// Save the best path index for this ant
-		antPaths[i] = bestPath
-
 	}
 	// occupied tracks which ant ID is in which room of each path
 	occupied := make([][]int, len(paths))
@@ -76,10 +73,10 @@ func Simulator(colony *parser.Colony, paths [][]string) error {
 				if 1 == len(paths[v])-1 || occupied[v][1] == 0 {
 					antID := antsOnPath[v][releasedCount[v]]
 					occupied[v][1] = antID
-					
+
 					moves = append(moves, fmt.Sprintf("L%d-%s", antID, paths[v][1]))
 					releasedCount[v]++
-					
+
 					if 1 == len(paths[v])-1 {
 						antsReachedEnd++
 					}
